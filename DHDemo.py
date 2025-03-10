@@ -7,6 +7,24 @@
 # The code presented here is an illustration of a 96 byte key exchange process, it is written to run on microPython on microcontroller hardware as well as regular Python3.
 # Illustration only, use at your own risk and not in any kind of production environment. 
 
+# DH key exchange works because (((N^A) %P)^B) %P == (((N^B) %P)^A) %P
+# == N^(A*B) %P (1)
+# Where N is typically 2, A & B are large random integers and P is a large prime
+# Alice and Bob must have already agreed on values for N & P - these are not secret.
+# They each now generate their own large random integers, their private keys.
+# Let Alice's private key be A and Bob's B
+# Alice calculates her intermediate public key Ka = (2^A) %P
+# Bob calculates his intermediate public key Kb = (2^B) %P
+# They then exchange Ka and Kb publicly - safe in the knowledge that Eve cannot
+# feasibly calculate A from Ka (or equally B from Kb) for large numbers.
+# Alice can now make the calculation (Kb^A) % P
+# Bob can now make the calculation (Ka^B) % P
+# But from (1) above we know (Kb^A) %P == (Ka^B) %P
+# So Alice and Bob have arrived at the same result, via different paths,
+#  and Eve is non the wiser.
+# Alice and Bob can now use their shared secret to derive a key for future
+#  symetrically encrypted communications (eg using AES)
+
 import os
 
 #import base64 utilities
