@@ -4,9 +4,11 @@
 # Share a 96B secret key from 96B public exchanges.  Works well on ESP32-based hardware.
 # Inspired by https://github.com/TOPDapp/py-diffie-hellman
 #
-# The code presented here is an illustration of a 96 byte key exchange process, it is written to run on microPython on microcontroller hardware as well as regular Python3.
+# The code presented here is an illustration of a 96 byte key exchange process,
+# it is written to run on microPython on microcontroller hardware as well as regular Python3.
 # Illustration only, use at your own risk and not in any kind of production environment. 
 
+# The maths...
 # DH key exchange works because (((N^A) %P)^B) %P == (((N^B) %P)^A) %P
 # == N^(A*B) %P (1)
 # Where N is typically 2, A & B are large random integers and P is a large prime
@@ -16,12 +18,13 @@
 # Alice calculates her intermediate public key Ka = (2^A) %P
 # Bob calculates his intermediate public key Kb = (2^B) %P
 # They then exchange Ka and Kb publicly - safe in the knowledge that Eve cannot
-# feasibly calculate A from Ka (or equally B from Kb) for large numbers.
+#  feasibly calculate A from Ka (or equally B from Kb) for large numbers.
 # Alice can now make the calculation (Kb^A) % P
 # Bob can now make the calculation (Ka^B) % P
 # But from (1) above we know (Kb^A) %P == (Ka^B) %P
 # So Alice and Bob have arrived at the same result, via different paths,
 #  and Eve is non the wiser.
+# The private keys can now be discarded, they are of no further use.
 # Alice and Bob can now use their shared secret to derive a key for future
 #  symetrically encrypted communications (eg using AES)
 
